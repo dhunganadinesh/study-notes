@@ -1,7 +1,7 @@
 # 🛡️ Security Governance Notes
-##🔺CIA Triad
+## 🔺CIA Triad
 
-####🕵️‍♂️ Confidentiality
+#### 🕵️‍♂️ Confidentiality
 Measure to ensure the protection of secrecy of data, objects, or resources.
 - Minimize unauthorized access to data.
 
