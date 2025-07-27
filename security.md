@@ -1,4 +1,4 @@
-# 🔐 Cybersecurity Basics
+# 🔐 Security Basics
 
 ## Confidentiality
 Prevent unauthorized access to data.
