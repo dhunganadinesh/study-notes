@@ -57,3 +57,64 @@ Countermeasures
 - 📦Abstraction: Efficient. Similar elements are put together. *HR, Payroll, IT*
 - 🧥 Data hiding: Security through obscurity does not provide protection. Hoping no one discovers.
 
+# 🚧 Security Boundaries
+
+Security boundaries define the points in a system where trust levels change, separating different zones to protect assets and control access.
+
+---
+
+## 🔑 Purpose of Security Boundaries
+
+- Limit the scope of trust between system components
+- Prevent unauthorized access or data leakage across zones
+- Enforce security policies appropriate to each zone
+- Contain potential security breaches within a boundary
+
+---
+
+## 🏗️ Types of Security Boundaries
+
+- **Physical Boundary**  
+  Separates physical environments, e.g., a locked server room.
+
+- **Network Boundary**  
+  Divides networks using firewalls, VLANs, or DMZs.
+
+- **Logical Boundary**  
+  Segregates data or processes within a system, e.g., user permissions, sandboxing.
+
+- **Application Boundary**  
+  Interfaces where applications communicate, enforcing validation and authentication.
+
+---
+
+## 🔄 Examples
+
+| Boundary Type     | Example                        |
+|-------------------|--------------------------------|
+| Physical          | Data center door access control|
+| Network           | Firewall between internal and external networks |
+| Logical           | User role separation within a database |
+| Application       | API authentication tokens      |
+
+---
+
+## 🛡️ Importance
+
+- Prevents attackers from moving laterally within a system
+- Ensures sensitive data is protected according to its classification
+- Supports compliance with regulatory requirements
+
+---
+
+## 📈 Best Practices
+
+- Clearly define and document all security boundaries
+- Use multiple layers of controls at boundaries (defense in depth)
+- Regularly audit boundary controls and configurations
+- Implement strict monitoring and logging at boundaries
+
+---
+
+*End of notes on Security Boundaries.*
+
