@@ -181,3 +181,201 @@ sudo netplan apply
 ---
 
 🔁 You can combine this setup with tools like **Wireshark**, **Zeek**, or **Arkime** to build full network visibility in your malware lab.
+
+
+# 🛡️ Secure Malware Lab Network with Internet Access
+
+This guide sets up two VMs using **VMware Workstation/Player**:
+
+- **REMnux VM**: Acts as a secure gateway (with internet)
+- **Malware VM**: Routes internet through REMnux for safe monitoring
+
+---
+
+## 🖥️ Architecture Overview
+
+```
+            +------------------+
+            |   Host Machine   |
+            |  (Isolated)      |
+            +--------+---------+
+                     |
+            [ VMnet1 - Host-Only ]
+                     |
+        +------------+------------+
+        |                         |
++---------------+        +----------------+
+|   Malware VM  |        |   REMnux VM    |
+| 192.168.56.101| <----> |192.168.56.1    |
+| Gateway: .1   |        | NAT to Internet|
++---------------+        +----------------+
+```
+
+---
+
+## 🧱 Step 1: Configure VMware Network
+
+### ✅ REMnux VM
+
+| Adapter # | Type      | Purpose            |
+|-----------|-----------|--------------------|
+| 1         | NAT       | Internet access    |
+| 2         | Host-Only | Malware VM access  |
+
+### ✅ Malware VM
+
+| Adapter # | Type      | Purpose              |
+|-----------|-----------|----------------------|
+| 1         | Host-Only | Route via REMnux     |
+
+---
+
+## 🛠️ Step 2: Update REMnux Network Configuration
+
+Edit the file:
+
+```bash
+sudo nano /etc/netplan/01-netcfg.yaml
+```
+
+Update it like this:
+
+```yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:   # NAT interface
+      dhcp4: true
+      dhcp6: false
+
+    enp0s8:   # Host-only interface (check with `ip a`)
+      dhcp4: no
+      dhcp6: no
+      addresses:
+        - 192.168.56.1/24
+```
+
+Apply config:
+
+```bash
+sudo netplan apply
+```
+
+Verify:
+
+```bash
+ip a
+```
+
+---
+
+## 🔄 Step 3: Enable Routing on REMnux
+
+```bash
+echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+---
+
+## 🔀 Step 4: Enable NAT with iptables
+
+```bash
+sudo iptables -t nat -A POSTROUTING -s 192.168.56.0/24 -o enp0s3 -j MASQUERADE
+sudo iptables -A FORWARD -i enp0s3 -o enp0s8 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i enp0s8 -o enp0s3 -j ACCEPT
+```
+
+Make rules persistent:
+
+```bash
+sudo apt install iptables-persistent
+```
+
+---
+
+## 🪟 Step 5: Configure Malware Windows VM
+
+Manually assign static IP:
+
+| Field      | Value              |
+|------------|--------------------|
+| IP         | 192.168.56.101     |
+| Subnet     | 255.255.255.0      |
+| Gateway    | 192.168.56.1       |
+| DNS        | 192.168.56.1 or 1.1.1.1 |
+
+Disable all other adapters and test:
+
+```cmd
+ping 192.168.56.1
+```
+
+Try browsing (optionally simulate internet with INetSim on REMnux).
+
+---
+
+## 🔐 Security Best Practices
+
+| Rule                            | Why                                      |
+|---------------------------------|------------------------------------------|
+| ❌ No shared folders             | Prevent malware escape                   |
+| ❌ No clipboard/drag-drop        | Avoid accidental file transfer           |
+| ❌ No bridge or NAT on malware VM| Prevent direct host/Internet access      |
+| ✅ Use snapshots                 | Easy rollback after analysis             |
+| ✅ Monitor traffic on REMnux     | Full visibility of malware behavior      |
+
+---
+
+## 📊 Optional Traffic Monitoring on REMnux
+
+| Tool         | Purpose                      |
+|--------------|------------------------------|
+| `tcpdump`    | Packet capture                |
+| `Wireshark`  | Visual traffic inspection     |
+| `INetSim`    | Fake internet services        |
+| `mitmproxy`  | Intercept HTTPS               |
+| `Zeek`       | High-level traffic analysis   |
+
+---
+
+## ✅ Final Checklist
+
+| Item                    | Status  |
+|-------------------------|---------|
+| REMnux NAT setup        | ✅       |
+| Host-Only bridge active | ✅       |
+| IP forwarding enabled   | ✅       |
+| Malware VM routed via REMnux | ✅   |
+| Host isolated           | ✅       |
+| Logging active (optional) | ✅     |
+
+---
+
+## 🧯 To Reset or Stop Routing
+
+```bash
+sudo iptables -F
+sudo iptables -t nat -F
+```
+
+---
+
+## 🧪 Sample Test
+
+```powershell
+# From Malware VM PowerShell
+Invoke-WebRequest http://example.com
+```
+
+Check REMnux with:
+
+```bash
+sudo tcpdump -i enp0s8
+```
+
+---
+
+Let me know if you want this turned into a PDF or zipped with scripts.
+
