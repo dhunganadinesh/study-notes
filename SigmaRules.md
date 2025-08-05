@@ -26,6 +26,7 @@ A typical Sigma rule is written in **YAML** and includes:
 ---
 
 ## 🔹 Example Sigma Rule
+[Sigma Rule Guide](https://github.com/SigmaHQ/sigma/wiki/Rule-Creation-Guide)
 
 ```yaml
 title: Suspicious PowerShell Download
