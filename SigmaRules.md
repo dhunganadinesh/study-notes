@@ -46,6 +46,7 @@ tags:
   - attack.execution
   - attack.t1059.001
 
+```
 
 ## 🔹 Tools Related to Sigma
 
