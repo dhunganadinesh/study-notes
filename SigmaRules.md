@@ -45,3 +45,51 @@ level: high
 tags:
   - attack.execution
   - attack.t1059.001
+
+
+## 🔹 Tools Related to Sigma
+
+Here are some popular tools used to work with Sigma rules:
+
+### 1. [sigmac](https://github.com/SigmaHQ/sigmac)
+A command-line tool that converts Sigma rules into SIEM-specific query formats like:
+- SPL (Splunk)
+- KQL (Azure Sentinel)
+- EQL (Elastic)
+- Others...
+
+GitHub Repo: [https://github.com/SigmaHQ/sigmac](https://github.com/SigmaHQ/sigmac)
+
+---
+
+### 2. [Uncoder.IO](https://uncoder.io/)
+A free, web-based GUI tool to:
+- Write Sigma rules
+- Convert between formats like Sigma, Splunk SPL, Elastic DSL, KQL, and more
+- Preview queries in real-time
+
+Website: [https://uncoder.io/](https://uncoder.io/)
+
+---
+
+### 3. [SigmaHQ (Main Project)](https://github.com/SigmaHQ/sigma)
+The official Sigma rules repository with hundreds of detection rules contributed by the security community.
+
+GitHub Repo: [https://github.com/SigmaHQ/sigma](https://github.com/SigmaHQ/sigma)
+
+---
+
+### 4. [SIGMA-CLI](https://github.com/SigmaHQ/sigma-cli)
+A newer and more powerful CLI tool from the Sigma team for rule conversion, validation, and searching.
+
+GitHub Repo: [https://github.com/SigmaHQ/sigma-cli](https://github.com/SigmaHQ/sigma-cli)
+
+---
+
+### 5. [Sigma Visual Rule Editor (VRE)](https://sigma.vx-underground.org/)
+A browser-based Sigma rule builder/editor powered by VX-Underground.
+
+Website: [https://sigma.vx-underground.org/](https://sigma.vx-underground.org/)
+
+---
+
