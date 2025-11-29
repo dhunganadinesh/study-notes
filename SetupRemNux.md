@@ -377,5 +377,4 @@ sudo tcpdump -i enp0s8
 
 ---
 
-Let me know if you want this turned into a PDF or zipped with scripts.
 
