@@ -1,0 +1,72 @@
+Layer	Protocol	Purpose
+7 / Application	HTTP, DNS	Actual content of communication
+6	TLS	Encrypts the data
+4	TCP	Reliable communication (handshake, ACKs)
+3	IP	Route across networks (IP addresses)
+2	Ethernet	Deliver across local network (MAC addresses)
+1 Physical	Frame	Actual bits sent over wire
+
+Encapsulation
+┌───────────────────────────────┐
+│       Application Data        │
+└──────────────┬────────────────┘
+               ↓
+┌───────────────────────────────┐
+│     TCP/UDP Header            │
+│     + Application Data        │
+└──────────────┬────────────────┘
+               ↓
+┌───────────────────────────────┐
+│     IP Header                 │
+│     + TCP/UDP + Data          │
+└──────────────┬────────────────┘
+               ↓
+┌───────────────────────────────┐
+│ Ethernet Header | Payload | FCS│
+└───────────────────────────────┘
+               ↓
+      Bits on the wire
+
+Decapsulation
+🔼 Receiver Side (Decapsulation)
+
+The reverse happens at the destination:
+Physical → Data Link → Network → Transport → Application
+Each layer removes its header and passes the rest up.
+Example:
+
+Ethernet removes Ethernet header
+IP removes IP header
+TCP/UDP removes its header
+Application gets the raw data
+Just like opening nested envelopes: [Frame] → [Ethernet] → [IP] → [TCP/UDP] → [Data]
+
+
+1. Find Host mac
+Pickup any packet and select 'Ethernet', you'll see Src and Dst mac address.
+
+2. Find host IP address
+Select 'Internet Protocol' frame and you'll see Source Address and Destination Address.
+
+3. Hostname - Find DNS, DHCP, NetBios or HTTP protocol.
+Filter packet with DHCP
+Select DHCP protocol -> Option (12) Host Name
+OR
+Filter with dns
+Expand 'Domain Name System (query)" ->  Expand "Updates" -> Expand second option -> Look for "Domain Name"
+
+
+📌 Summary Table
+| Protocol               | Hostname?         | IP Address?      | Where to look            |
+| ---------------------- | ----------------- | ---------------- | ------------------------ |
+| **DNS**                | ✅ Yes             | ✅ Yes            | Queries & Answers        |
+| **HTTP (port 80)**     | ✅ Host header     | ✅ Yes            | HTTP → Host              |
+| **HTTPS / TLS**        | 🟡 Sometimes      | ✅ Yes            | TLS → Client Hello → SNI |
+| **DHCP**               | ✅ Device hostname | ❌                | DHCP Options             |
+| **NetBIOS/SMB**        | ✅ Windows name    | ❌                | NetBIOS Name             |
+| **mDNS/LLMNR**         | ✅ Local hostname  | ❌                | Query/Answer             |
+| **General IP packets** | ❌ No              | ✅ Yes            | IPv4/IPv6 header         |
+| **Ethernet**           | ❌ No              | ❌ MAC only       | Ethernet Header          |
+| **ARP**                | ❌ No              | 🟡 IP inside ARP | ARP Source/Target        |
+
+
