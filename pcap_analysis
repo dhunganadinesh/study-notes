@@ -49,12 +49,15 @@ Pickup any packet and select 'Ethernet', you'll see Src and Dst mac address.
 Select 'Internet Protocol' frame and you'll see Source Address and Destination Address.
 
 3. Hostname - Find DNS, DHCP, NetBios or HTTP protocol.
-Filter packet with DHCP
+Filter packet with 'dhcp' and look DHCP Request packet.
 Select DHCP protocol -> Option (12) Host Name
 OR
 Filter with dns
 Expand 'Domain Name System (query)" ->  Expand "Updates" -> Expand second option -> Look for "Domain Name"
 
+OR 
+
+Filter 'nbns' packets and look the info column.
 
 📌 Summary Table
 | Protocol               | Hostname?         | IP Address?      | Where to look            |
@@ -68,5 +71,26 @@ Expand 'Domain Name System (query)" ->  Expand "Updates" -> Expand second option
 | **General IP packets** | ❌ No              | ✅ Yes            | IPv4/IPv6 header         |
 | **Ethernet**           | ❌ No              | ❌ MAC only       | Ethernet Header          |
 | **ARP**                | ❌ No              | 🟡 IP inside ARP | ARP Source/Target        |
+
+4. Find OS and Web Browsers.
+
+Filter with "(http.request or tls.handshake.type eq 1) and !(ssdp)". Save this filter as "Basic".
+Find GET request -> Right click -> Follow TCP Stream.
+
+Windows NT 5.1 - Windows XP
+Windows NT 6.0 - Windows Vista
+Windows NT 6.1 - Windows 7
+Windows NT 6.2 - Windows 8
+Windows NT 6.3 - Windows 8.1
+Windows NT 10.0 - Windows 10 and Windows 11
+
+
+5. Identify users in AD environment.
+Filter packet with "kerberos" -> Look for "AS-REQ" in the info -> Expand "Kerberos" -> "Expand "as-req" -> "req-body" -> cname -> Expand "cname-string" -> Here is the username.
+Realm = Domain
+
+OR
+
+Filter with "ldap contains "CN=Users"
 
 
